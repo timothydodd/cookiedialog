@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  cookiedialog-docs:
+    build:
+      context: .
+      dockerfile: Dockerfile.docs
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    environment:
+      - NGINX_HOST=localhost
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Production setup with domain
+  cookiedialog-docs-prod:
+    image: timdoddcool/cookiedialog:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    profiles:
+      - production
+    volumes:
+      - ./ssl:/etc/nginx/ssl:ro  # Mount SSL certificates if needed
+    environment:
+      - NGINX_HOST=cookiedialog.com

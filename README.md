@@ -205,6 +205,20 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## Documentation
+
+📚 **Full documentation available at:**
+
+**Docker (Self-hosted)**:
+```bash
+docker run -p 8080:80 timdoddcool/cookiedialog:latest
+# Visit http://localhost:8080
+```
+
+**Online**: [cookiedialog.com](https://cookiedialog.com)
+
+See [DOCKER.md](DOCKER.md) for detailed deployment instructions.
+
 ## Support
 
 For issues and feature requests, please use the [GitHub issues page](https://github.com/timothydodd/cookiedialog/issues).

@@ -1,0 +1,79 @@
+# Multi-stage Docker build for CookieDialog documentation
+
+# Stage 1: Build the documentation
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy documentation source
+COPY docs/package*.json ./docs/
+COPY docs/ ./docs/
+
+# Install dependencies and build
+RUN cd docs && npm ci && npm run build
+
+# Stage 2: Production web server
+FROM nginx:alpine
+
+# Copy custom nginx configuration
+COPY <<EOF /etc/nginx/nginx.conf
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 256;
+    gzip_types text/plain text/css text/xml text/javascript application/javascript application/json;
+
+    server {
+        listen 80;
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Handle client-side routing
+        location / {
+            try_files \$uri \$uri/ /index.html;
+        }
+
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+
+        # Cache static assets
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+
+        # Health check endpoint
+        location /health {
+            access_log off;
+            return 200 "OK";
+            add_header Content-Type text/plain;
+        }
+    }
+}
+EOF
+
+# Copy built documentation from builder stage
+COPY --from=builder /app/docs/dist/ /usr/share/nginx/html/
+
+# Expose port 80
+EXPOSE 80
+
+# Add labels for Docker Hub
+LABEL org.opencontainers.image.title="CookieDialog Documentation"
+LABEL org.opencontainers.image.description="Documentation for CookieDialog - GDPR Cookie Consent Library"
+LABEL org.opencontainers.image.url="https://github.com/timothydodd/cookiedialog"
+LABEL org.opencontainers.image.source="https://github.com/timothydodd/cookiedialog"
+LABEL org.opencontainers.image.vendor="Timothy Dodd"
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

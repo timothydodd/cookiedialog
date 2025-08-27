@@ -2,7 +2,9 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 
 export default defineConfig({
-  site: 'https://cookiedialog.com',
+  site: 'https://cookiedialog.com', // Will work with any domain
+  // base: '/cookiedialog', // Remove base for self-hosting
+  outDir: './dist',
   integrations: [
     starlight({
       title: 'CookieDialog',
