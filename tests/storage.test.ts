@@ -2,7 +2,7 @@ import { ConsentStorage } from '../src/storage';
 
 describe('ConsentStorage', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    // Clear localStorage before each test
     localStorage.clear();
   });
 
@@ -20,6 +20,12 @@ describe('ConsentStorage', () => {
     expect(consent.categories).toEqual(categories);
     expect(consent.reason).toBe('user_accept');
     expect(consent.timestamp).toBeGreaterThan(0);
+
+    // Verify it was saved to localStorage
+    const stored = localStorage.getItem('cookiedialog_consent');
+    expect(stored).toBeTruthy();
+    const parsed = JSON.parse(stored!);
+    expect(parsed.categories).toEqual(categories);
   });
 
   test('should return null for non-existent consent', () => {
@@ -37,5 +43,15 @@ describe('ConsentStorage', () => {
     storage.saveConsent({ necessary: true }, 'user_accept');
     
     expect(storage.hasConsent()).toBe(true);
+  });
+
+  test('should clear consent', () => {
+    const storage = new ConsentStorage(365);
+    
+    storage.saveConsent({ necessary: true }, 'user_accept');
+    expect(storage.hasConsent()).toBe(true);
+    
+    storage.clearConsent();
+    expect(storage.hasConsent()).toBe(false);
   });
 });
