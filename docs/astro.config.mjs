@@ -5,6 +5,11 @@ export default defineConfig({
   site: 'https://cookiedialog.com', // Will work with any domain
   // base: '/cookiedialog', // Remove base for self-hosting
   outDir: './dist',
+  trailingSlash: 'always',
+  server: {
+    host: true,
+    port: 80
+  },
   integrations: [
     starlight({
       title: 'CookieDialog',
@@ -68,6 +73,13 @@ export default defineConfig({
         },
       ],
       head: [
+        {
+          tag: 'meta',
+          attrs: {
+            'http-equiv': 'Content-Security-Policy',
+            content: 'upgrade-insecure-requests'
+          },
+        },
         {
           tag: 'script',
           attrs: {

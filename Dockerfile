@@ -29,6 +29,9 @@ RUN npm ci
 # Copy documentation source
 COPY docs/ ./
 
+# Set environment variable to force HTTPS URLs
+ENV ASTRO_SITE=https://cookiedialog.com
+
 # Build the documentation site
 RUN npm run build
 

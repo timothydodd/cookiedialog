@@ -36,7 +36,7 @@ import 'cookiedialog/dist/cookiedialog.min.css';
 
 ## Download
 
-Download the latest release files from [GitHub releases](https://github.com/timothydodd/cookiedialog/releases) and include them in your project:
+Download the latest release files from [GitHub releases](https://github.com/timothydodd/cookiedialog/releases) or get them directly from [cookiedialog.com](https://cookiedialog.com/) and include them in your project:
 
 ```html
 <link rel="stylesheet" href="path/to/cookiedialog.min.css">

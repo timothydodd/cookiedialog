@@ -67,10 +67,53 @@ CookieDialog.init({
 ## Live Demo
 
 <div id="demo-container" style="margin: 2rem 0;">
-  <button onclick="window.CookieDialog.init({ forceShow: true }).show()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
+  <button onclick="showDemoDialog()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
     Show Cookie Dialog
   </button>
+  <button onclick="resetDemoDialog()" style="padding: 12px 24px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; margin-left: 10px;">
+    Reset Demo
+  </button>
 </div>
+
+<script>
+let demoDialog = null;
+
+function showDemoDialog() {
+  if (!demoDialog) {
+    demoDialog = window.CookieDialog.init({
+      forceShow: true,
+      position: 'center',
+      theme: 'light',
+      categories: [
+        { id: 'necessary', name: 'Essential', required: true },
+        { id: 'analytics', name: 'Analytics', required: false },
+        { id: 'marketing', name: 'Marketing', required: false }
+      ],
+      texts: {
+        title: '🍪 CookieDialog Demo',
+        description: 'This is a demo of the CookieDialog library. Choose your cookie preferences below.'
+      },
+      onAccept: (consent) => {
+        console.log('Demo: Accepted cookies', consent);
+      },
+      onReject: (consent) => {
+        console.log('Demo: Rejected cookies', consent);
+      }
+    });
+  }
+  demoDialog.show();
+}
+
+function resetDemoDialog() {
+  if (demoDialog) {
+    demoDialog.resetConsent();
+    demoDialog.destroy();
+    demoDialog = null;
+  }
+  localStorage.removeItem('cookiedialog_consent');
+  console.log('Demo reset');
+}
+</script>
 
 ## Features at a Glance
 
@@ -92,6 +135,7 @@ CookieDialog.init({
 
 ## Getting Help
 
+- [Documentation](https://cookiedialog.com/) - Complete guides and examples
 - [GitHub Issues](https://github.com/timothydodd/cookiedialog/issues) - Report bugs or request features
 - [Discussions](https://github.com/timothydodd/cookiedialog/discussions) - Ask questions and share ideas
 - [Stack Overflow](https://stackoverflow.com/questions/tagged/cookiedialog) - Community support
