@@ -1,6 +1,6 @@
 {
   "name": "cookiedialog",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lightweight GDPR cookie consent dialog with geolocation support",
   "main": "dist/cookiedialog.min.js",
   "module": "dist/cookiedialog.esm.js",
