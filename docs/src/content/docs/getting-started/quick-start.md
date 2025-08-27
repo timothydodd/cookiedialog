@@ -14,8 +14,8 @@ Get CookieDialog up and running on your website in less than 5 minutes.
 Add these two lines to your HTML `<head>`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.css">
-<script src="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.css">
+<script src="https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.js"></script>
 ```
 
 ### Option B: NPM
@@ -79,13 +79,13 @@ Here's a complete HTML page with CookieDialog:
   <title>My Website</title>
   
   <!-- CookieDialog CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.css">
 </head>
 <body>
   <h1>Welcome to My Website</h1>
   
   <!-- CookieDialog JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.js"></script>
   
   <script>
     // Initialize CookieDialog

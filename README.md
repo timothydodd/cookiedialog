@@ -25,8 +25,8 @@
 Add these lines to your HTML:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.css">
-<script src="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.css">
+<script src="https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.js"></script>
 
 <script>
   CookieDialog.init({

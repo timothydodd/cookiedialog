@@ -71,7 +71,7 @@ export default defineConfig({
         {
           tag: 'script',
           attrs: {
-            src: 'https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.js',
+            src: 'https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.js',
             defer: true,
           },
         },
@@ -79,7 +79,7 @@ export default defineConfig({
           tag: 'link',
           attrs: {
             rel: 'stylesheet',
-            href: 'https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.css',
+            href: 'https://cdn.jsdelivr.net/npm/cookiedialog@1.0.3/dist/cookiedialog.min.css',
           },
         },
       ],
