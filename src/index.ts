@@ -16,8 +16,8 @@ export class CookieDialog {
   constructor(config: Partial<CookieDialogConfig> = {}) {
     this.config = this.mergeConfig(config);
     this.storage = new ConsentStorage(this.config.expiryDays);
-    this.categories = this.config.categories || this.getDefaultCategories();
     this.translations = this.config.translations || this.getDefaultTranslations();
+    this.categories = this.config.categories || this.getDefaultCategories();
     
     if (this.config.enableLocation) {
       this.geolocation = new GeolocationService(this.config.geolocationEndpoint);
