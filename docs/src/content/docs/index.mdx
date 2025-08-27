@@ -66,53 +66,90 @@ CookieDialog.init({
 
 ## Live Demo
 
-<div id="demo-container" style="margin: 2rem 0;">
-  <button onclick="showDemoDialog()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
+<div id="demo-container" style={{ margin: '2rem 0' }}>
+  <button 
+    id="show-demo-btn"
+    style={{ 
+      padding: '12px 24px', 
+      background: '#667eea', 
+      color: 'white', 
+      border: 'none', 
+      borderRadius: '6px', 
+      cursor: 'pointer',
+      marginRight: '10px'
+    }}
+  >
     Show Cookie Dialog
   </button>
-  <button onclick="resetDemoDialog()" style="padding: 12px 24px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; margin-left: 10px;">
+  <button 
+    id="reset-demo-btn"
+    style={{ 
+      padding: '12px 24px', 
+      background: '#dc3545', 
+      color: 'white', 
+      border: 'none', 
+      borderRadius: '6px', 
+      cursor: 'pointer'
+    }}
+  >
     Reset Demo
   </button>
 </div>
 
-<script>
-let demoDialog = null;
+<script is:inline>
+{`
+document.addEventListener('DOMContentLoaded', function() {
+  let demoDialog = null;
 
-function showDemoDialog() {
-  if (!demoDialog) {
-    demoDialog = window.CookieDialog.init({
-      forceShow: true,
-      position: 'center',
-      theme: 'light',
-      categories: [
-        { id: 'necessary', name: 'Essential', required: true },
-        { id: 'analytics', name: 'Analytics', required: false },
-        { id: 'marketing', name: 'Marketing', required: false }
-      ],
-      texts: {
-        title: '🍪 CookieDialog Demo',
-        description: 'This is a demo of the CookieDialog library. Choose your cookie preferences below.'
-      },
-      onAccept: (consent) => {
-        console.log('Demo: Accepted cookies', consent);
-      },
-      onReject: (consent) => {
-        console.log('Demo: Rejected cookies', consent);
-      }
-    });
+  function showDemoDialog() {
+    if (!demoDialog) {
+      demoDialog = window.CookieDialog.init({
+        forceShow: true,
+        position: 'center',
+        theme: 'light',
+        categories: [
+          { id: 'necessary', name: 'Essential', required: true },
+          { id: 'analytics', name: 'Analytics', required: false },
+          { id: 'marketing', name: 'Marketing', required: false }
+        ],
+        texts: {
+          title: '🍪 CookieDialog Demo',
+          description: 'This is a demo of the CookieDialog library. Choose your cookie preferences below.'
+        },
+        onAccept: (consent) => {
+          console.log('Demo: Accepted cookies', consent);
+        },
+        onReject: (consent) => {
+          console.log('Demo: Rejected cookies', consent);
+        }
+      });
+    }
+    demoDialog.show();
   }
-  demoDialog.show();
-}
 
-function resetDemoDialog() {
-  if (demoDialog) {
-    demoDialog.resetConsent();
-    demoDialog.destroy();
-    demoDialog = null;
+  function resetDemoDialog() {
+    if (demoDialog) {
+      demoDialog.resetConsent();
+      demoDialog.destroy();
+      demoDialog = null;
+    }
+    localStorage.removeItem('cookiedialog_consent');
+    console.log('Demo reset');
   }
-  localStorage.removeItem('cookiedialog_consent');
-  console.log('Demo reset');
-}
+
+  // Add event listeners
+  const showBtn = document.getElementById('show-demo-btn');
+  const resetBtn = document.getElementById('reset-demo-btn');
+  
+  if (showBtn) {
+    showBtn.addEventListener('click', showDemoDialog);
+  }
+  
+  if (resetBtn) {
+    resetBtn.addEventListener('click', resetDemoDialog);
+  }
+});
+`}
 </script>
 
 ## Features at a Glance
