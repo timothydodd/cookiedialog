@@ -1,0 +1,97 @@
+---
+title: CookieDialog Documentation
+description: A lightweight GDPR cookie consent dialog with geolocation support
+template: splash
+hero:
+  tagline: Lightweight, customizable cookie consent management for GDPR compliance
+  image:
+    file: ../../assets/cookie-big.png
+  actions:
+    - text: Get Started
+      link: /getting-started/quick-start/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/timothydodd/cookiedialog
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why CookieDialog?
+
+CookieDialog provides a simple, lightweight solution for GDPR cookie consent management that respects your users' privacy while keeping your site compliant.
+
+<CardGrid stagger>
+  <Card title="Zero Dependencies" icon="rocket">
+    Pure JavaScript implementation with no external dependencies. Less than 20KB gzipped.
+  </Card>
+  <Card title="Geolocation Detection" icon="star">
+    Automatically detect if users are in GDPR-required regions and show consent dialog accordingly.
+  </Card>
+  <Card title="Easy Integration" icon="add-document">
+    Simple CDN or NPM installation. Works with any framework or vanilla JavaScript.
+  </Card>
+  <Card title="Fully Customizable" icon="pencil">
+    Themes, translations, categories, and styling options to match your brand.
+  </Card>
+</CardGrid>
+
+## Quick Installation
+
+### CDN
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.css">
+<script src="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.js"></script>
+```
+
+### NPM
+
+```bash
+npm install cookiedialog
+```
+
+## Basic Usage
+
+```javascript
+CookieDialog.init({
+  enableLocation: true,
+  privacyUrl: '/privacy',
+  onAccept: (consent) => {
+    console.log('Cookies accepted:', consent);
+  }
+});
+```
+
+## Live Demo
+
+<div id="demo-container" style="margin: 2rem 0;">
+  <button onclick="window.CookieDialog.init({ forceShow: true }).show()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">
+    Show Cookie Dialog
+  </button>
+</div>
+
+## Features at a Glance
+
+- ✅ GDPR Compliant
+- ✅ Persistent consent storage
+- ✅ Cookie categories management
+- ✅ Mobile responsive
+- ✅ Dark/Light themes
+- ✅ Multiple languages support
+- ✅ TypeScript support
+- ✅ Accessibility compliant
+
+## Browser Support
+
+- Chrome/Edge 88+
+- Firefox 78+
+- Safari 14+
+- Opera 74+
+
+## Getting Help
+
+- [GitHub Issues](https://github.com/timothydodd/cookiedialog/issues) - Report bugs or request features
+- [Discussions](https://github.com/timothydodd/cookiedialog/discussions) - Ask questions and share ideas
+- [Stack Overflow](https://stackoverflow.com/questions/tagged/cookiedialog) - Community support

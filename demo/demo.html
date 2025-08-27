@@ -1,0 +1,262 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CookieDialog Demo - GDPR Cookie Consent</title><style>* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 50px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .tagline {
+      font-size: 1.2em;
+      opacity: 0.9;
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #667eea;
+    }
+
+    .demo-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .control-group {
+      padding: 15px;
+      background: #f7f7f7;
+      border-radius: 8px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #5a67d8;
+    }
+
+    button.secondary {
+      background: #48bb78;
+    }
+
+    button.secondary:hover {
+      background: #38a169;
+    }
+
+    button.danger {
+      background: #f56565;
+    }
+
+    button.danger:hover {
+      background: #e53e3e;
+    }
+
+    .code-block {
+      background: #1a1a1a;
+      color: #e0e0e0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    .code-block pre {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+
+    .consent-status {
+      padding: 15px;
+      background: #f0f9ff;
+      border-left: 4px solid #3182ce;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .feature-card h3 {
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2em;
+      }
+      
+      .demo-section {
+        padding: 20px;
+      }
+    }</style><script defer="defer" src="../dist/cookiedialog.min.js"></script><link href="../dist/cookiedialog.min.css" rel="stylesheet"></head><body><div class="container"><header><h1>🍪 CookieDialog</h1><p class="tagline">Lightweight GDPR Cookie Consent Solution</p></header><div class="demo-section"><h2>Live Demo Controls</h2><div class="demo-controls"><div class="control-group"><label for="position">Dialog Position</label> <select id="position"><option value="bottom">Bottom</option><option value="top">Top</option><option value="center">Center (Modal)</option></select></div><div class="control-group"><label for="theme">Theme</label> <select id="theme"><option value="light">Light</option><option value="dark">Dark</option></select></div><div class="control-group"><label for="enableLocation"><input type="checkbox" id="enableLocation" style="width: auto; margin-right: 8px;"> Enable Geolocation Detection</label></div><div class="control-group"><label for="privacyUrl">Privacy Policy URL</label> <input id="privacyUrl" placeholder="/privacy" value="/privacy"></div></div><div class="button-group"><button onclick="showDialog()">Show Dialog</button> <button class="secondary" onclick="checkConsent()">Check Consent Status</button> <button class="danger" onclick="resetConsent()">Reset Consent</button></div><div class="consent-status" id="consentStatus">Click "Check Consent Status" to see current consent state</div></div><div class="demo-section"><h2>Quick Integration</h2><h3>CDN Installation</h3><div class="code-block"><pre>&lt;!-- Add to your HTML head --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/npm/cookiedialog@latest/dist/cookiedialog.min.js"&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  CookieDialog.init({
+    enableLocation: true,
+    privacyUrl: '/privacy',
+    onAccept: (consent) => {
+      console.log('Consent given:', consent);
+    }
+  });
+&lt;/script&gt;</pre></div><h3>NPM Installation</h3><div class="code-block"><pre>npm install cookiedialog
+
+// In your JavaScript
+import CookieDialog from 'cookiedialog';
+
+const dialog = new CookieDialog({
+  enableLocation: true,
+  theme: 'dark'
+});
+
+dialog.init();</pre></div></div><div class="demo-section"><h2>Features</h2><div class="feature-grid"><div class="feature-card"><h3>🚀 Lightweight</h3><p>&lt;20KB gzipped</p></div><div class="feature-card"><h3>📍 Geolocation</h3><p>Auto-detect GDPR regions</p></div><div class="feature-card"><h3>💾 Local Storage</h3><p>Persistent consent</p></div><div class="feature-card"><h3>🎨 Customizable</h3><p>Themes & translations</p></div><div class="feature-card"><h3>📱 Responsive</h3><p>Mobile-friendly</p></div><div class="feature-card"><h3>🔧 Zero Dependencies</h3><p>Pure JavaScript</p></div></div></div></div><script>let dialogInstance = null;
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeDialog();
+    });
+
+    function initializeDialog() {
+      const config = {
+        position: document.getElementById('position').value,
+        theme: document.getElementById('theme').value,
+        enableLocation: document.getElementById('enableLocation').checked,
+        privacyUrl: document.getElementById('privacyUrl').value,
+        autoShow: false,
+        onAccept: (consent) => {
+          console.log('Consent accepted:', consent);
+          updateConsentStatus();
+        },
+        onReject: () => {
+          console.log('Consent rejected');
+          updateConsentStatus();
+        },
+        onChange: (consent) => {
+          console.log('Consent changed:', consent);
+          updateConsentStatus();
+        }
+      };
+
+      if (dialogInstance) {
+        dialogInstance.destroy();
+      }
+
+      dialogInstance = window.CookieDialog.init(config);
+    }
+
+    function showDialog() {
+      initializeDialog();
+      dialogInstance.show();
+    }
+
+    function checkConsent() {
+      if (!dialogInstance) {
+        initializeDialog();
+      }
+      updateConsentStatus();
+    }
+
+    function updateConsentStatus() {
+      const consent = dialogInstance.getConsent();
+      const statusDiv = document.getElementById('consentStatus');
+      
+      if (consent) {
+        const categories = Object.entries(consent.categories)
+          .map(([key, value]) => `${key}: ${value ? '✅' : '❌'}`)
+          .join(', ');
+        
+        const date = new Date(consent.timestamp).toLocaleString();
+        
+        statusDiv.innerHTML = `
+          <strong>Consent Status:</strong> Given<br>
+          <strong>Categories:</strong> ${categories}<br>
+          <strong>Timestamp:</strong> ${date}
+        `;
+      } else {
+        statusDiv.innerHTML = '<strong>Consent Status:</strong> Not given yet';
+      }
+    }
+
+    function resetConsent() {
+      if (!dialogInstance) {
+        initializeDialog();
+      }
+      dialogInstance.resetConsent();
+      updateConsentStatus();
+      alert('Consent has been reset. Refresh the page to see the dialog again.');
+    }</script></body></html>

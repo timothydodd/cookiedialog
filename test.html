@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CookieDialog Test Page</title>
+  
+  <!-- Load the built CSS and JS files -->
+  <link rel="stylesheet" href="./dist/cookiedialog.min.css">
+  
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    button:hover {
+      background: #0056b3;
+    }
+    
+    button.secondary {
+      background: #28a745;
+    }
+    
+    button.secondary:hover {
+      background: #1e7e34;
+    }
+    
+    button.danger {
+      background: #dc3545;
+    }
+    
+    button.danger:hover {
+      background: #c82333;
+    }
+    
+    .status {
+      background: #e9ecef;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border-left: 4px solid #007bff;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    
+    select, input[type="text"], input[type="number"] {
+      padding: 8px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    label {
+      display: block;
+      margin: 10px 0;
+    }
+    
+    .inline {
+      display: inline-block;
+      margin-right: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍪 CookieDialog Test Page</h1>
+  <p>This page lets you test the CookieDialog library with different configurations.</p>
+  
+  <!-- Configuration Section -->
+  <div class="test-section">
+    <h2>Configuration</h2>
+    
+    <label class="inline">
+      Position: 
+      <select id="position">
+        <option value="bottom">Bottom</option>
+        <option value="top">Top</option>
+        <option value="center">Center (Modal)</option>
+      </select>
+    </label>
+    
+    <label class="inline">
+      Theme: 
+      <select id="theme">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </label>
+    
+    <label class="inline">
+      <input type="checkbox" id="enableLocation"> Enable Geolocation
+    </label>
+    
+    <label class="inline">
+      <input type="checkbox" id="forceShow"> Force Show (ignore existing consent)
+    </label>
+    
+    <label class="inline">
+      Privacy URL: 
+      <input type="text" id="privacyUrl" value="/privacy" placeholder="/privacy">
+    </label>
+    
+    <label class="inline">
+      Expiry Days: 
+      <input type="number" id="expiryDays" value="365" min="1" max="999">
+    </label>
+  </div>
+  
+  <!-- Control Buttons -->
+  <div class="test-section">
+    <h2>Controls</h2>
+    
+    <button onclick="initializeDialog()">Initialize Dialog</button>
+    <button onclick="showDialog()">Show Dialog</button>
+    <button onclick="hideDialog()">Hide Dialog</button>
+    <button class="secondary" onclick="checkStatus()">Check Status</button>
+    <button class="danger" onclick="resetConsent()">Reset Consent</button>
+    <button class="danger" onclick="destroyDialog()">Destroy Dialog</button>
+  </div>
+  
+  <!-- Status Display -->
+  <div class="test-section">
+    <h2>Status</h2>
+    <div id="status" class="status">Click "Check Status" to see current state</div>
+  </div>
+  
+  <!-- API Test Section -->
+  <div class="test-section">
+    <h2>API Tests</h2>
+    
+    <button onclick="testHasConsent()">Test hasConsent()</button>
+    <button onclick="testGetConsent()">Test getConsent()</button>
+    <button onclick="testGetCategory('necessary')">Test getCategoryConsent('necessary')</button>
+    <button onclick="testGetCategory('analytics')">Test getCategoryConsent('analytics')</button>
+    <button onclick="testGetCategory('marketing')">Test getCategoryConsent('marketing')</button>
+  </div>
+  
+  <!-- Event Log -->
+  <div class="test-section">
+    <h2>Event Log</h2>
+    <button onclick="clearLog()">Clear Log</button>
+    <div id="eventLog" class="status" style="max-height: 200px; overflow-y: auto;">Events will appear here...</div>
+  </div>
+
+  <!-- Load the built JavaScript -->
+  <script src="./dist/cookiedialog.min.js"></script>
+  
+  <script>
+    let dialogInstance = null;
+    
+    function log(message) {
+      const logDiv = document.getElementById('eventLog');
+      const timestamp = new Date().toLocaleTimeString();
+      logDiv.textContent += `[${timestamp}] ${message}\n`;
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+    
+    function getConfig() {
+      return {
+        position: document.getElementById('position').value,
+        theme: document.getElementById('theme').value,
+        enableLocation: document.getElementById('enableLocation').checked,
+        forceShow: document.getElementById('forceShow').checked,
+        privacyUrl: document.getElementById('privacyUrl').value || undefined,
+        expiryDays: parseInt(document.getElementById('expiryDays').value) || 365,
+        autoShow: false, // We'll control showing manually for testing
+        categories: [
+          {
+            id: 'necessary',
+            name: 'Essential Cookies',
+            description: 'Required for the website to function properly',
+            required: true
+          },
+          {
+            id: 'analytics',
+            name: 'Analytics',
+            description: 'Help us understand how visitors use our website',
+            required: false
+          },
+          {
+            id: 'marketing',
+            name: 'Marketing',
+            description: 'Used to deliver personalized advertisements',
+            required: false
+          }
+        ],
+        onAccept: (consent) => {
+          log('onAccept callback fired');
+          log(`Consent reason: ${consent.reason}`);
+          log(`Accepted categories: ${JSON.stringify(consent.categories, null, 2)}`);
+          if (consent.locationData) {
+            log(`Location data: ${JSON.stringify(consent.locationData, null, 2)}`);
+          }
+          updateStatus();
+        },
+        onReject: () => {
+          log('onReject callback fired');
+          updateStatus();
+        },
+        onChange: (consent) => {
+          log('onChange callback fired');
+          log(`Changed categories: ${JSON.stringify(consent.categories, null, 2)}`);
+          updateStatus();
+        },
+        onLocationNotRequired: (locationData) => {
+          log('onLocationNotRequired callback fired');
+          log(`Location not requiring GDPR consent: ${JSON.stringify(locationData, null, 2)}`);
+          updateStatus();
+        }
+      };
+    }
+    
+    function initializeDialog() {
+      try {
+        // Debug: Check if CookieDialog is available
+        log('CookieDialog object available: ' + (typeof window.CookieDialog !== 'undefined'));
+        log('CookieDialog.init available: ' + (typeof window.CookieDialog?.init === 'function'));
+        log('CookieDialog object keys: ' + Object.keys(window.CookieDialog || {}));
+        log('CookieDialog object: ' + JSON.stringify(window.CookieDialog, null, 2));
+        
+        if (dialogInstance) {
+          dialogInstance.destroy();
+        }
+        
+        const config = getConfig();
+        log('Initializing dialog with config: ' + JSON.stringify(config, null, 2));
+        
+        dialogInstance = window.CookieDialog.init(config);
+        log('Dialog initialized successfully');
+        updateStatus();
+      } catch (error) {
+        log('Error initializing dialog: ' + error.message);
+        log('Stack trace: ' + error.stack);
+      }
+    }
+    
+    function showDialog() {
+      if (!dialogInstance) {
+        initializeDialog();
+      }
+      
+      try {
+        dialogInstance.show();
+        log('Dialog shown');
+      } catch (error) {
+        log('Error showing dialog: ' + error.message);
+      }
+    }
+    
+    function hideDialog() {
+      if (dialogInstance) {
+        try {
+          dialogInstance.hide();
+          log('Dialog hidden');
+        } catch (error) {
+          log('Error hiding dialog: ' + error.message);
+        }
+      } else {
+        log('No dialog instance to hide');
+      }
+    }
+    
+    function resetConsent() {
+      if (dialogInstance) {
+        try {
+          dialogInstance.resetConsent();
+          log('Consent reset');
+          updateStatus();
+        } catch (error) {
+          log('Error resetting consent: ' + error.message);
+        }
+      } else {
+        // Clear localStorage manually if no instance
+        localStorage.removeItem('cookiedialog_consent');
+        log('Consent cleared from localStorage');
+        updateStatus();
+      }
+    }
+    
+    function destroyDialog() {
+      if (dialogInstance) {
+        try {
+          dialogInstance.destroy();
+          dialogInstance = null;
+          log('Dialog destroyed');
+          updateStatus();
+        } catch (error) {
+          log('Error destroying dialog: ' + error.message);
+        }
+      } else {
+        log('No dialog instance to destroy');
+      }
+    }
+    
+    function checkStatus() {
+      updateStatus();
+    }
+    
+    function updateStatus() {
+      const statusDiv = document.getElementById('status');
+      let status = '';
+      
+      if (dialogInstance) {
+        status += 'Dialog Instance: ✅ Active\n';
+        
+        try {
+          const hasConsent = dialogInstance.hasConsent();
+          status += `Has Consent: ${hasConsent ? '✅ Yes' : '❌ No'}\n`;
+          
+          const consent = dialogInstance.getConsent();
+          if (consent) {
+            status += `Consent Timestamp: ${new Date(consent.timestamp).toLocaleString()}\n`;
+            status += `Consent Version: ${consent.version}\n`;
+            status += `Consent Reason: ${consent.reason}\n`;
+            if (consent.locationData) {
+              status += `Location Data: ${JSON.stringify(consent.locationData, null, 2)}\n`;
+            }
+            status += 'Categories:\n';
+            
+            Object.entries(consent.categories).forEach(([key, value]) => {
+              status += `  ${key}: ${value ? '✅' : '❌'}\n`;
+            });
+          } else {
+            status += 'Consent Data: None\n';
+          }
+        } catch (error) {
+          status += `Error getting consent: ${error.message}\n`;
+        }
+      } else {
+        status += 'Dialog Instance: ❌ Not initialized\n';
+        
+        // Check localStorage directly
+        const stored = localStorage.getItem('cookiedialog_consent');
+        if (stored) {
+          try {
+            const consent = JSON.parse(stored);
+            status += `LocalStorage Consent: ✅ Found\n`;
+            status += `Timestamp: ${new Date(consent.timestamp).toLocaleString()}\n`;
+            status += JSON.stringify(consent, null, 2);
+          } catch (error) {
+            status += `LocalStorage Consent: ❌ Invalid JSON\n`;
+          }
+        } else {
+          status += 'LocalStorage Consent: ❌ Not found\n';
+        }
+      }
+      
+      statusDiv.textContent = status;
+    }
+    
+    function testHasConsent() {
+      if (dialogInstance) {
+        const result = dialogInstance.hasConsent();
+        log(`hasConsent() returned: ${result}`);
+      } else {
+        log('No dialog instance - initialize first');
+      }
+    }
+    
+    function testGetConsent() {
+      if (dialogInstance) {
+        const result = dialogInstance.getConsent();
+        log(`getConsent() returned: ${JSON.stringify(result, null, 2)}`);
+      } else {
+        log('No dialog instance - initialize first');
+      }
+    }
+    
+    function testGetCategory(categoryId) {
+      if (dialogInstance) {
+        const result = dialogInstance.getCategoryConsent(categoryId);
+        log(`getCategoryConsent('${categoryId}') returned: ${result}`);
+      } else {
+        log('No dialog instance - initialize first');
+      }
+    }
+    
+    function clearLog() {
+      document.getElementById('eventLog').textContent = 'Events will appear here...\n';
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      log('Page loaded - CookieDialog test page ready');
+      updateStatus();
+    });
+  </script>
+</body>
+</html>
