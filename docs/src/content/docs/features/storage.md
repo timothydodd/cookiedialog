@@ -158,19 +158,19 @@ window.addEventListener('storage', (event) => {
 ### Handling Version Changes
 
 ```javascript
-CookieDialog.init({
-  onInit: () => {
-    const consent = dialog.getConsent();
-    
-    if (consent && consent.version !== '1.0.0') {
-      // Handle migration from older version
-      console.log('Migrating from version:', consent.version);
-      
-      // Reset consent to show dialog again
-      dialog.resetConsent();
-    }
-  }
+const dialog = CookieDialog.init({
+  // ... your configuration ...
 });
+
+// Check for version migration after initialization
+const consent = dialog.getConsent();
+if (consent && consent.version !== '1.0.0') {
+  // Handle migration from older version
+  console.log('Migrating from version:', consent.version);
+  
+  // Reset consent to show dialog again
+  dialog.resetConsent();
+}
 ```
 
 ### Automatic Migration

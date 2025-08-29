@@ -43,7 +43,7 @@ CookieDialog.init();
 
 // Or with configuration
 CookieDialog.init({
-  enableLocation: true,
+  enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
   privacyUrl: '/privacy-policy',
   theme: 'dark',
   position: 'bottom',

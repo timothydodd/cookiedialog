@@ -100,9 +100,9 @@ describe('useCookieConsent', () => {
     const { result } = renderHook(() => useCookieConsent());
 
     act(() => {
-      // Simulate onInit callback
-      const initCall = global.CookieDialog.init.mock.calls[0][0];
-      initCall.onInit(true);
+      // Simulate checking existing consent after initialization
+      global.CookieDialog.init().hasConsent.mockReturnValue(true);
+      global.CookieDialog.init().getConsent.mockReturnValue(mockConsent);
     });
 
     expect(result.current.consent).toEqual(mockConsent);

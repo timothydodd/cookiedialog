@@ -66,24 +66,6 @@ CookieDialog.init({
 });
 ```
 
-### `onInit`
-
-Triggered when CookieDialog is initialized:
-
-```javascript
-CookieDialog.init({
-  onInit: (hasExistingConsent) => {
-    console.log('CookieDialog initialized');
-    console.log('Has existing consent:', hasExistingConsent);
-    
-    if (hasExistingConsent) {
-      // User has already made a choice
-      const consent = this.getConsent();
-      applyExistingConsent(consent);
-    }
-  }
-});
-```
 
 ## Consent Data Structure
 
@@ -105,42 +87,95 @@ All callbacks receive a consent object with this structure:
 
 ## Practical Examples
 
-### Google Analytics Integration
+### Google Analytics Integration (GA4 with Consent Mode)
 
 ```javascript
-CookieDialog.init({
-  categories: [
-    { id: 'necessary', name: 'Essential', required: true },
-    { id: 'analytics', name: 'Analytics', required: false }
-  ],
+// Load GA4 with denied consent by default
+function initializeGoogleAnalytics() {
+  if (window.gtag) return;
   
-  onAccept: (consent) => {
-    if (consent.categories.analytics) {
-      // Initialize Google Analytics
-      gtag('config', 'GA_MEASUREMENT_ID', {
-        anonymize_ip: true,
-        cookie_flags: 'max-age=7200;secure;samesite=strict'
-      });
-      
-      // Track consent acceptance
-      gtag('event', 'cookie_consent', {
-        event_category: 'privacy',
-        event_label: 'accepted'
-      });
-    }
-  },
-  
-  onReject: (consent) => {
-    // Track consent rejection (if analytics already enabled)
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'cookie_consent', {
-        event_category: 'privacy',
-        event_label: 'rejected'
-      });
-    }
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
+  document.head.appendChild(script);
+
+  script.onload = function() {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    window.gtag = gtag;
+    gtag('js', new Date());
+    
+    // Set default consent state (denied for GDPR compliance)
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+    
+    gtag('config', 'GA_MEASUREMENT_ID', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=Strict;Secure'
+    });
+  };
+}
+
+// Update consent based on user choices
+function updateGoogleConsent(consent) {
+  if (window.gtag) {
+    window.gtag('consent', 'update', {
+      'analytics_storage': consent.categories.analytics ? 'granted' : 'denied',
+      'ad_storage': consent.categories.marketing ? 'granted' : 'denied',
+      'ad_user_data': consent.categories.marketing ? 'granted' : 'denied',
+      'ad_personalization': consent.categories.marketing ? 'granted' : 'denied'
+    });
   }
+}
+
+// Initialize on page load
+window.addEventListener('load', function() {
+  // Initialize CookieDialog first
+  const dialog = CookieDialog.init({
+    enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
+    categories: [
+      { id: 'necessary', name: 'Essential', required: true },
+      { id: 'analytics', name: 'Analytics', required: false },
+      { id: 'marketing', name: 'Marketing', required: false }
+    ],
+    
+    onAccept: (consent) => {
+      updateGoogleConsent(consent);
+      
+      // Track consent event
+      if (consent.categories.analytics && window.gtag) {
+        gtag('event', 'cookie_consent', {
+          'consent_action': 'accept',
+          'analytics_consent': 'granted',
+          'marketing_consent': consent.categories.marketing ? 'granted' : 'denied'
+        });
+      }
+    },
+    
+    onReject: (consent) => {
+      updateGoogleConsent(consent);
+    },
+    
+    onChange: (consent) => {
+      updateGoogleConsent(consent);
+    },
+  });
+  
+  // Load Google Analytics after CookieDialog initialization
+  const hasExistingConsent = dialog.hasConsent();
+  const existingConsent = hasExistingConsent ? dialog.getConsent() : null;
+  
+  // Initialize GA with current consent state
+  initializeGoogleAnalytics(existingConsent);
 });
 ```
+
+For a complete guide, see [Google Analytics Integration](/examples/google-analytics) or [Microsoft Clarity Integration](/examples/clarity).
 
 ### Marketing Pixels Integration
 

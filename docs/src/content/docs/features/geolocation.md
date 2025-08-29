@@ -7,6 +7,12 @@ description: Learn how to use IP-based geolocation to show the cookie dialog onl
 
 CookieDialog can automatically detect user location and only show the cookie dialog to visitors from GDPR regions (EU/EEA countries).
 
+:::caution[Important Configuration Choice]
+**For most websites, we recommend using `enableLocation: false`** to ensure all users see the cookie dialog regardless of location. This approach is simpler and ensures GDPR compliance for all visitors.
+
+Only use `enableLocation: true` if you specifically want to show the dialog only to users in GDPR regions and you have a reliable geolocation service.
+:::
+
 ## Basic Usage
 
 Enable geolocation detection by setting `enableLocation: true`:

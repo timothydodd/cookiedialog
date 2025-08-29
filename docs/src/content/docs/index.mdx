@@ -56,7 +56,7 @@ npm install cookiedialog
 
 ```javascript
 CookieDialog.init({
-  enableLocation: true,
+  enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
   privacyUrl: '/privacy',
   onAccept: (consent) => {
     console.log('Cookies accepted:', consent);

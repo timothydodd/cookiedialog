@@ -320,7 +320,7 @@ async function initializeCookieDialog() {
   // Only initialize if not already done
   if (!CookieDialog.isInitialized()) {
     const dialog = CookieDialog.init({
-      enableLocation: true,
+      enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
       categories: [
         { id: 'necessary', name: 'Essential', required: true },
         { id: 'analytics', name: 'Analytics', required: false },

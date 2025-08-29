@@ -25,6 +25,7 @@ function App() {
         { id: 'analytics', name: 'Analytics', required: false },
         { id: 'marketing', name: 'Marketing', required: false }
       ],
+      enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
       onAccept: (consent) => {
         console.log('Consent accepted:', consent);
       }
@@ -72,17 +73,22 @@ export function useCookieConsent(config = {}) {
       onChange: (consentData) => {
         setConsent(consentData);
         config.onChange?.(consentData);
-      },
-      onInit: (hasExistingConsent) => {
-        if (hasExistingConsent) {
-          setConsent(cookieDialog.getConsent());
-        }
-        setIsLoading(false);
-        config.onInit?.(hasExistingConsent);
       }
     });
 
     setDialog(cookieDialog);
+    
+    // Load analytics after CookieDialog initialization
+    const hasExistingConsent = cookieDialog.hasConsent();
+    const existingConsent = hasExistingConsent ? cookieDialog.getConsent() : null;
+    
+    // Initialize analytics services with current consent
+    initializeAnalytics(existingConsent);
+    
+    if (existingConsent) {
+      setConsent(existingConsent);
+    }
+    setIsLoading(false);
 
     return () => {
       cookieDialog.destroy();

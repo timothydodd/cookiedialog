@@ -99,7 +99,7 @@ CookieDialog.init({
 
 ```javascript
 CookieDialog.init({
-  enableLocation: true
+  enableLocation: false // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
 });
 ```
 
@@ -110,8 +110,8 @@ CookieDialog.init({
 
 ```javascript
 CookieDialog.init({
-  enableLocation: true,
-  locationEndpoint: 'https://my-custom-geo-api.com/location'
+  enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions (requires geolocation)
+  locationEndpoint: 'https://my-custom-geo-api.com/location' // Only used when enableLocation: true
 });
 ```
 
@@ -193,7 +193,7 @@ CookieDialog.init({
   showSettingsButton: true,
   
   // Geolocation
-  enableLocation: true,
+  enableLocation: false, // false: Always show dialog, true: Only show in GDPR regions
   
   // Categories
   categories: [

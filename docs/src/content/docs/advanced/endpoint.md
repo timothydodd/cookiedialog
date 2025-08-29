@@ -11,7 +11,7 @@ CookieDialog allows you to specify a custom geolocation endpoint for IP-based lo
 
 ```javascript
 CookieDialog.init({
-  enableLocation: true,
+  enableLocation: true, // Required for custom geolocation endpoints
   locationEndpoint: 'https://api.mysite.com/geolocation'
 });
 ```
@@ -182,7 +182,7 @@ CookieDialog will only use the country code, but you can access the full respons
 
 ```javascript
 CookieDialog.init({
-  enableLocation: true,
+  enableLocation: true, // Required for custom geolocation endpoints
   locationEndpoint: 'https://api.mysite.com/geolocation',
   onLocationSuccess: (locationData) => {
     console.log('Full location data:', locationData);
@@ -385,7 +385,7 @@ async function getLocationWithFallback() {
 
 // Use with CookieDialog
 CookieDialog.init({
-  enableLocation: true,
+  enableLocation: true, // Required for custom geolocation functions
   customLocationFunction: getLocationWithFallback
 });
 ```

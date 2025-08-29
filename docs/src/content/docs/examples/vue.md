@@ -193,14 +193,20 @@ export function useCookieConsent(config = {}) {
       onChange: (consentData) => {
         consent.value = consentData
         config.onChange?.(consentData)
-      },
-      onInit: (hasExistingConsent) => {
-        if (hasExistingConsent && dialog.value) {
-          consent.value = dialog.value.getConsent()
-        }
-        isLoading.value = false
       }
     })
+    
+    // Load analytics after CookieDialog initialization
+    const hasExistingConsent = dialog.value.hasConsent()
+    const existingConsent = hasExistingConsent ? dialog.value.getConsent() : null
+    
+    // Initialize analytics services with current consent
+    initializeAnalytics(existingConsent)
+    
+    if (existingConsent) {
+      consent.value = existingConsent
+    }
+    isLoading.value = false
   })
 
   onUnmounted(() => {
@@ -263,14 +269,20 @@ export const useCookieConsentStore = defineStore('cookieConsent', {
         onChange: (consentData) => {
           this.consent = consentData
           config.onChange?.(consentData)
-        },
-        onInit: (hasExistingConsent) => {
-          if (hasExistingConsent && this.dialog) {
-            this.consent = this.dialog.getConsent()
-          }
-          this.isLoading = false
         }
       })
+      
+      // Load analytics after CookieDialog initialization
+      const hasExistingConsent = this.dialog.hasConsent()
+      const existingConsent = hasExistingConsent ? this.dialog.getConsent() : null
+      
+      // Initialize analytics services with current consent
+      this.initializeAnalytics(existingConsent)
+      
+      if (existingConsent) {
+        this.consent = existingConsent
+      }
+      this.isLoading = false
     },
 
     showSettings() {

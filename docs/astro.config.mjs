@@ -59,6 +59,8 @@ export default defineConfig({
             { label: 'React', link: '/examples/react' },
             { label: 'Vue', link: '/examples/vue' },
             { label: 'Angular', link: '/examples/angular' },
+            { label: 'Google Analytics', link: '/examples/google-analytics' },
+            { label: 'Microsoft Clarity', link: '/examples/clarity' },
             { label: 'WordPress', link: '/examples/wordpress' },
           ],
         },

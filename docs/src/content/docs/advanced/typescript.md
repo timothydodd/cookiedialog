@@ -36,7 +36,6 @@ interface CookieDialogConfig {
   onAccept?: (consent: ConsentData) => void;
   onReject?: (consent: ConsentData) => void;
   onChange?: (consent: ConsentData) => void;
-  onInit?: (hasExistingConsent: boolean) => void;
 }
 
 // Cookie category interface
@@ -182,17 +181,22 @@ export function useCookieConsent(
       onChange: (consentData: ConsentData) => {
         setConsent(consentData);
         config.onChange?.(consentData);
-      },
-      onInit: (hasExistingConsent: boolean) => {
-        if (hasExistingConsent) {
-          setConsent(cookieDialog.getConsent());
-        }
-        setIsLoading(false);
-        config.onInit?.(hasExistingConsent);
       }
     });
 
     setDialog(cookieDialog);
+    
+    // Load analytics after CookieDialog initialization
+    const hasExistingConsent = cookieDialog.hasConsent();
+    const existingConsent = hasExistingConsent ? cookieDialog.getConsent() : null;
+    
+    // Initialize analytics services with current consent
+    initializeAnalytics(existingConsent);
+    
+    if (existingConsent) {
+      setConsent(existingConsent);
+    }
+    setIsLoading(false);
 
     return () => {
       cookieDialog.destroy();
@@ -469,7 +473,6 @@ declare module 'cookiedialog' {
     onAccept?: (consent: ConsentData) => void;
     onReject?: (consent: ConsentData) => void;
     onChange?: (consent: ConsentData) => void;
-    onInit?: (hasExistingConsent: boolean) => void;
   }
 
   export interface CookieCategory {
