@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CookieDialog Demo - GDPR Cookie Consent</title>
+  <link rel="stylesheet" href="../dist/cookiedialog.min.css">
+  <script src="../dist/cookiedialog.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -175,7 +177,7 @@
 <body>
   <div class="container">
     <header>
-      <img src="../docs/src/assets/cookie-big.png" alt="CookieDialog Logo" style="width: 80px; height: 80px; margin-bottom: 20px;">
+      <img src="../logo.png" alt="CookieDialog Logo" style="width: 80px; height: 80px; margin-bottom: 20px;">
       <h1>CookieDialog</h1>
       <p class="tagline">Lightweight GDPR Cookie Consent Solution</p>
     </header>
@@ -198,6 +200,7 @@
           <select id="theme">
             <option value="light">Light</option>
             <option value="dark">Dark</option>
+            <option value="auto">Auto (system)</option>
           </select>
         </div>
 
@@ -307,6 +310,7 @@ dialog.init();</pre>
         enableLocation: document.getElementById('enableLocation').checked,
         privacyUrl: document.getElementById('privacyUrl').value,
         autoShow: false,
+        debug: true,
         onAccept: (consent) => {
           console.log('Consent accepted:', consent);
           updateConsentStatus();

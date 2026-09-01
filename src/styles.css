@@ -1,302 +1,430 @@
+/*
+ * CookieDialog styles
+ * Override any of the --cd-* custom properties on .cookie-dialog (or :root)
+ * to match your site's branding.
+ */
+
+.cookie-dialog,
+.cookie-dialog-overlay {
+  --cd-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --cd-font-size: 14px;
+  --cd-bg: #ffffff;
+  --cd-text: #1f2328;
+  --cd-text-muted: #59636e;
+  --cd-border: #d9dee3;
+  --cd-accent: #0a5cc2;
+  --cd-accent-hover: #084a9c;
+  --cd-accent-text: #ffffff;
+  --cd-accent-soft: rgba(10, 92, 194, 0.1);
+  --cd-toggle-off: #b8c0c8;
+  --cd-badge-bg: #eef1f4;
+  --cd-radius: 12px;
+  --cd-button-radius: 8px;
+  --cd-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  --cd-overlay: rgba(15, 20, 25, 0.45);
+  --cd-max-width: 1100px;
+  --cd-focus-ring: 0 0 0 3px rgba(10, 92, 194, 0.4);
+  --cd-duration: 0.3s;
+}
+
+/* Dark palette: explicit theme, or "auto" following the OS setting */
+.cookie-dialog.theme-dark,
+.cookie-dialog-overlay.theme-dark {
+  --cd-bg: #1b1f24;
+  --cd-text: #e6edf3;
+  --cd-text-muted: #9ba7b4;
+  --cd-border: #343b44;
+  --cd-accent: #4c9aff;
+  --cd-accent-hover: #6fb0ff;
+  --cd-accent-text: #0b1526;
+  --cd-accent-soft: rgba(76, 154, 255, 0.15);
+  --cd-toggle-off: #4b555f;
+  --cd-badge-bg: #2a3138;
+  --cd-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --cd-focus-ring: 0 0 0 3px rgba(76, 154, 255, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  .cookie-dialog.theme-auto,
+  .cookie-dialog-overlay.theme-auto {
+    --cd-bg: #1b1f24;
+    --cd-text: #e6edf3;
+    --cd-text-muted: #9ba7b4;
+    --cd-border: #343b44;
+    --cd-accent: #4c9aff;
+    --cd-accent-hover: #6fb0ff;
+    --cd-accent-text: #0b1526;
+    --cd-accent-soft: rgba(76, 154, 255, 0.15);
+    --cd-toggle-off: #4b555f;
+    --cd-badge-bg: #2a3138;
+    --cd-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --cd-focus-ring: 0 0 0 3px rgba(76, 154, 255, 0.45);
+  }
+}
+
+/* ---------- Overlay (center position only) ---------- */
+
 .cookie-dialog-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  inset: 0;
+  background: var(--cd-overlay);
   z-index: 999998;
-  display: none;
-  animation: fadeIn 0.3s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--cd-duration) ease, visibility 0s linear var(--cd-duration);
 }
 
 .cookie-dialog-overlay.show {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--cd-duration) ease;
 }
+
+/* ---------- Dialog shell ---------- */
 
 .cookie-dialog {
   position: fixed;
   left: 0;
   right: 0;
-  background: #ffffff;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
   z-index: 999999;
-  display: none;
-  animation: slideUp 0.3s ease-in-out;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333333;
   box-sizing: border-box;
+  max-height: min(90vh, 90dvh);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 20px 24px;
+  background: var(--cd-bg);
+  color: var(--cd-text);
+  font-family: var(--cd-font-family);
+  font-size: var(--cd-font-size);
+  line-height: 1.5;
+  box-shadow: var(--cd-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform var(--cd-duration) ease,
+    opacity var(--cd-duration) ease,
+    visibility 0s linear var(--cd-duration);
 }
 
 .cookie-dialog.show {
-  display: block;
+  opacity: 1;
+  visibility: visible;
+  transition: transform var(--cd-duration) ease, opacity var(--cd-duration) ease;
+}
+
+.cookie-dialog *,
+.cookie-dialog *::before,
+.cookie-dialog *::after {
+  box-sizing: border-box;
 }
 
 .cookie-dialog.position-bottom {
   bottom: 0;
-  border-radius: 8px 8px 0 0;
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius) var(--cd-radius) 0 0;
+  transform: translateY(100%);
 }
 
 .cookie-dialog.position-top {
   top: 0;
-  bottom: auto;
-  border-radius: 0 0 8px 8px;
-  animation: slideDown 0.3s ease-in-out;
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--cd-border);
+  border-radius: 0 0 var(--cd-radius) var(--cd-radius);
+  transform: translateY(-100%);
+}
+
+.cookie-dialog.position-bottom.show,
+.cookie-dialog.position-top.show {
+  transform: translateY(0);
 }
 
 .cookie-dialog.position-center {
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 600px;
-  width: 90%;
-  border-radius: 8px;
-  animation: fadeInScale 0.3s ease-in-out;
+  right: auto;
+  width: min(92vw, 560px);
+  border: 1px solid var(--cd-border);
+  border-radius: var(--cd-radius);
+  transform: translate(-50%, -50%) scale(0.96);
 }
 
-.cookie-dialog.theme-dark {
-  background: #1a1a1a;
-  color: #e0e0e0;
+.cookie-dialog.position-center.show {
+  transform: translate(-50%, -50%) scale(1);
 }
+
+/* ---------- Content ---------- */
 
 .cookie-dialog-container {
-  max-width: 1200px;
+  max-width: var(--cd-max-width);
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
+  gap: 16px 32px;
+}
+
+.cookie-dialog.position-center .cookie-dialog-container {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.cookie-dialog.position-center .cookie-dialog-content {
+  flex: 0 0 auto;
 }
 
 .cookie-dialog-content {
-  flex: 1;
-  min-width: 300px;
+  flex: 1 1 320px;
+  min-width: 0;
 }
 
 .cookie-dialog-title {
-  font-size: 18px;
+  margin: 0 0 6px 0;
+  font-size: 17px;
   font-weight: 600;
-  margin: 0 0 8px 0;
+  line-height: 1.3;
+  color: inherit;
 }
 
 .cookie-dialog-description {
-  margin: 0 0 12px 0;
-  opacity: 0.9;
+  margin: 0;
+  color: var(--cd-text-muted);
 }
 
-.cookie-dialog-link {
-  color: #0066cc;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.2s;
+.cookie-dialog-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 8px;
 }
 
-.cookie-dialog-link:hover {
-  border-bottom-color: #0066cc;
+.cookie-dialog .cookie-dialog-link {
+  color: var(--cd-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s;
+  border-radius: 3px;
 }
 
-.theme-dark .cookie-dialog-link {
-  color: #66b3ff;
+.cookie-dialog .cookie-dialog-link:hover,
+.cookie-dialog .cookie-dialog-link:focus-visible {
+  text-decoration-color: currentColor;
 }
+
+/* ---------- Buttons ---------- */
 
 .cookie-dialog-buttons {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
 }
 
-.cookie-dialog-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
+.cookie-dialog .cookie-dialog-button {
+  margin: 0;
+  padding: 10px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--cd-button-radius);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.3;
   white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  color: inherit;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.cookie-dialog .cookie-dialog-button-accept {
+  background: var(--cd-accent);
+  border-color: var(--cd-accent);
+  color: var(--cd-accent-text);
+}
+
+.cookie-dialog .cookie-dialog-button-accept:hover {
+  background: var(--cd-accent-hover);
+  border-color: var(--cd-accent-hover);
+}
+
+/* Reject gets the same visual weight as Accept, as regulators expect */
+.cookie-dialog .cookie-dialog-button-reject {
+  border-color: var(--cd-accent);
+  color: var(--cd-accent);
+}
+
+.cookie-dialog .cookie-dialog-button-reject:hover {
+  background: var(--cd-accent-soft);
+  color: var(--cd-accent);
+}
+
+.cookie-dialog .cookie-dialog-button-settings {
+  color: var(--cd-text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.cookie-dialog .cookie-dialog-button-settings:hover {
+  background: var(--cd-accent-soft);
+  color: var(--cd-text);
+}
+
+.cookie-dialog *:focus {
   outline: none;
 }
 
-.cookie-dialog-button:focus-visible {
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.5);
+.cookie-dialog *:focus-visible {
+  box-shadow: var(--cd-focus-ring);
 }
 
-.cookie-dialog-button-accept {
-  background: #0066cc;
-  color: white;
-}
-
-.cookie-dialog-button-accept:hover {
-  background: #0052a3;
-}
-
-.cookie-dialog-button-reject {
-  background: #e0e0e0;
-  color: #333333;
-}
-
-.cookie-dialog-button-reject:hover {
-  background: #cccccc;
-}
-
-.cookie-dialog-button-settings {
-  background: transparent;
-  color: #0066cc;
-  border: 1px solid #0066cc;
-}
-
-.cookie-dialog-button-settings:hover {
-  background: rgba(0, 102, 204, 0.1);
-}
-
-.theme-dark .cookie-dialog-button-reject {
-  background: #333333;
-  color: #e0e0e0;
-}
-
-.theme-dark .cookie-dialog-button-reject:hover {
-  background: #404040;
-}
-
-.theme-dark .cookie-dialog-button-settings {
-  color: #66b3ff;
-  border-color: #66b3ff;
-}
-
-.theme-dark .cookie-dialog-button-settings:hover {
-  background: rgba(102, 179, 255, 0.1);
-}
+/* ---------- Settings panel ---------- */
 
 .cookie-dialog-settings {
   display: none;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  max-width: var(--cd-max-width);
+  margin: 20px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--cd-border);
 }
 
-.cookie-dialog-settings.show {
+.cookie-dialog.settings-open .cookie-dialog-settings {
   display: block;
 }
 
-.theme-dark .cookie-dialog-settings {
-  border-top-color: #333333;
+.cookie-dialog.settings-open .cookie-dialog-container > .cookie-dialog-buttons {
+  display: none;
+}
+
+.cookie-dialog-categories {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 16px;
 }
 
 .cookie-dialog-category {
-  margin-bottom: 15px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cd-border);
 }
 
-.cookie-dialog-category-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 5px;
+.cookie-dialog-category:last-child {
+  border-bottom: none;
+}
+
+.cookie-dialog-category-text {
+  min-width: 0;
 }
 
 .cookie-dialog-category-name {
-  font-weight: 500;
+  display: block;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .cookie-dialog-category-description {
-  font-size: 12px;
-  opacity: 0.8;
-  margin-bottom: 5px;
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--cd-text-muted);
 }
+
+.cookie-dialog-badge {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--cd-badge-bg);
+  color: var(--cd-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------- Toggle switch ---------- */
 
 .cookie-dialog-toggle {
   position: relative;
-  display: inline-block;
+  flex-shrink: 0;
   width: 44px;
   height: 24px;
+  margin-top: 1px;
 }
 
 .cookie-dialog-toggle input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   opacity: 0;
-  width: 0;
-  height: 0;
+  cursor: pointer;
 }
 
 .cookie-dialog-toggle-slider {
   position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: 0.3s;
+  inset: 0;
   border-radius: 24px;
+  background: var(--cd-toggle-off);
+  transition: background-color 0.25s;
+  pointer-events: none;
 }
 
-.cookie-dialog-toggle-slider:before {
-  position: absolute;
+.cookie-dialog-toggle-slider::before {
   content: "";
-  height: 18px;
-  width: 18px;
+  position: absolute;
   left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: 0.3s;
+  top: 3px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s;
 }
 
 .cookie-dialog-toggle input:checked + .cookie-dialog-toggle-slider {
-  background-color: #0066cc;
+  background: var(--cd-accent);
 }
 
-.cookie-dialog-toggle input:checked + .cookie-dialog-toggle-slider:before {
+.cookie-dialog-toggle input:checked + .cookie-dialog-toggle-slider::before {
   transform: translateX(20px);
 }
 
-.cookie-dialog-toggle input:disabled + .cookie-dialog-toggle-slider {
-  cursor: not-allowed;
-  opacity: 0.5;
+.cookie-dialog-toggle input:focus-visible + .cookie-dialog-toggle-slider {
+  box-shadow: var(--cd-focus-ring);
 }
 
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
+/* ---------- Motion ---------- */
 
-@keyframes slideDown {
-  from {
-    transform: translateY(-100%);
+@media (prefers-reduced-motion: reduce) {
+  .cookie-dialog,
+  .cookie-dialog-overlay {
+    --cd-duration: 0.01s;
   }
-  to {
-    transform: translateY(0);
+
+  .cookie-dialog-toggle-slider,
+  .cookie-dialog-toggle-slider::before,
+  .cookie-dialog-button,
+  .cookie-dialog-link {
+    transition: none;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
+/* ---------- Small screens ---------- */
 
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .cookie-dialog {
-    padding: 15px;
+    padding: 16px;
+  }
+
+  .cookie-dialog.position-bottom {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    border-radius: var(--cd-radius) var(--cd-radius) 0 0;
   }
 
   .cookie-dialog-container {
@@ -304,9 +432,13 @@
     align-items: stretch;
   }
 
+  .cookie-dialog-content {
+    flex: 0 0 auto;
+  }
+
   .cookie-dialog-buttons {
     flex-direction: column;
-    width: 100%;
+    align-items: stretch;
   }
 
   .cookie-dialog-button {
@@ -314,11 +446,19 @@
     padding: 12px;
   }
 
+  /* Center position becomes a bottom sheet on phones */
   .cookie-dialog.position-center {
-    width: 95%;
-    bottom: 10px;
     top: auto;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    border-radius: var(--cd-radius) var(--cd-radius) 0 0;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    transform: translateY(100%);
+  }
+
+  .cookie-dialog.position-center.show {
+    transform: translateY(0);
   }
 }

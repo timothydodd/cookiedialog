@@ -2,7 +2,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
@@ -66,14 +65,7 @@ module.exports = (env, argv) => {
       },
       globalObject: 'this'
     },
-    plugins: [
-      ...commonConfig.plugins,
-      new HtmlWebpackPlugin({
-        template: './demo/index.html',
-        filename: '../demo/demo.html',
-        inject: 'head'
-      })
-    ]
+    plugins: [...commonConfig.plugins]
   };
 
   // ESM build

@@ -1,7 +1,7 @@
 # CookieDialog Project - Claude Code Assistant Guide
 
 ## Project Overview
-CookieDialog is a lightweight GDPR cookie consent dialog library with geolocation support, designed to be easily integrated via CDN or NPM. The project is hosted at cookiedialog.com.
+CookieDialog is a lightweight GDPR cookie consent dialog library with geolocation support, designed to be easily integrated via CDN or NPM. Documentation is hosted at https://robododd.com/cookie-dialog/.
 
 ## Project Structure
 ```
@@ -14,13 +14,10 @@ cookiedialog/
 │   └── styles.css         # Dialog styles
 ├── dist/                   # Built library files (generated)
 ├── demo/                   # Demo HTML page
-├── docs/                   # Astro documentation site
-│   ├── src/content/docs/  # Documentation markdown files
-│   └── astro.config.mjs   # Astro configuration
-├── deploy-azure.sh        # Azure deployment script
-├── Dockerfile             # Docker container configuration
-└── nginx.conf            # Nginx server configuration
+└── tests/                  # Jest tests
 ```
+
+Documentation lives on the external site https://robododd.com/cookie-dialog/ (maintained separately). The README is the in-repo reference.
 
 ## Development Commands
 
@@ -42,24 +39,6 @@ npm test
 npm run lint
 ```
 
-### Documentation Site
-```bash
-# Navigate to docs folder
-cd docs
-
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-```
-
 ## Testing the Library Locally
 
 1. **Build the library first:**
@@ -69,38 +48,17 @@ npm run preview
 
 2. **Open the demo page:**
    ```bash
-   # Open demo/index.html in a browser
-   # Or use a local server:
-   npx serve demo
+   npm run demo
+   # then open http://localhost:3000
    ```
 
 3. **Test different configurations in the demo page:**
    - Position (bottom, top, center)
-   - Theme (light, dark)
+   - Theme (light, dark, auto)
    - Geolocation detection
    - Consent persistence
 
-## Deployment Options
-
-### Azure Storage Account
-```bash
-# Make the script executable
-chmod +x deploy-azure.sh
-
-# Run deployment (requires Azure CLI)
-./deploy-azure.sh
-```
-
-### Docker Container
-```bash
-# Build the Docker image
-docker build -t cookiedialog .
-
-# Run locally
-docker run -p 80:80 cookiedialog
-
-# Access at http://localhost
-```
+## Deployment
 
 ### NPM Publishing
 ```bash
@@ -206,8 +164,7 @@ npm install <package>@latest
 1. Update TypeScript types in `src/types.ts`
 2. Implement feature in appropriate source file
 3. Update demo page to showcase feature
-4. Add documentation in `docs/src/content/docs/`
-5. Update README.md and this CLAUDE.md file
+4. Document it in README.md and update this CLAUDE.md file
 
 ### Version Bumping
 ```bash
@@ -223,18 +180,15 @@ Before committing changes, ensure:
 - [ ] TypeScript compiles without errors: `npm run build`
 - [ ] Linting passes: `npm run lint`
 - [ ] Demo page works correctly
-- [ ] Documentation builds: `cd docs && npm run build`
 - [ ] README is updated if needed
 - [ ] Version number is updated if releasing
 
 ## Useful Resources
 - [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 - [Webpack Configuration](https://webpack.js.org/configuration/)
-- [Astro Documentation](https://astro.build/)
 - [GDPR Cookie Requirements](https://gdpr.eu/cookies/)
-- [Azure Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/)
 
 ## Contact & Support
 - GitHub Issues: [github.com/timothydodd/cookiedialog/issues](https://github.com/timothydodd/cookiedialog/issues)
-- Documentation: [cookiedialog.com](https://cookiedialog.com)
+- Documentation: [robododd.com/cookie-dialog](https://robododd.com/cookie-dialog/)
 - NPM Package: [npmjs.com/package/cookiedialog](https://www.npmjs.com/package/cookiedialog)

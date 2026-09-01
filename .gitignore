@@ -7,10 +7,6 @@ build/
 *.min.js
 *.min.css
 
-# Documentation build
-docs/dist/
-docs/.astro/
-
 # IDE files
 .vscode/
 .idea/
